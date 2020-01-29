@@ -34,12 +34,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.Color.Black;
             this.DoubleBuffered = true;
             this.Name = "PlotControl";
             this.Size = new System.Drawing.Size(395, 271);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.PlotControl_Paint);
             this.SizeChanged += new System.EventHandler(this.PlotControl_SizeChanged);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.PlotControl_Paint);
             this.ResumeLayout(false);
 
         }

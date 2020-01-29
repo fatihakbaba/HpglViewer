@@ -10,11 +10,13 @@ namespace Hpgl
 {
     public class HpglFile
     {
+        
         public HpglFile(string path)
         {
             m_instructions = new List<IInstruction>();
             m_errors = new List<HpglError>();
             m_fileName = Path.GetFileName(path);
+            m_labels = new List<HpglLabels>();
 
             ReadWholeFile (new StreamReader(path));
             SearchMinMax () ;
@@ -41,6 +43,13 @@ namespace Hpgl
             get
             {
                 return m_errors;
+            }
+        }
+        public IEnumerable<HpglLabels> Label
+        {
+            get
+            {
+                return m_labels;
             }
         }
 
@@ -92,10 +101,29 @@ namespace Hpgl
         {
             int lineNumber = 0 ;
             string lineText = null;
+            List<HpglLabels> hpglLabels = new List<HpglLabels>();
+            string prev1 = "", prev2 = "";
 
-            while( ( lineText = file.ReadLine() ) != null )
+
+            while ( ( lineText = file.ReadLine() ) != null )
             {
                 lineNumber++ ;
+
+                if (lineText.StartsWith("LB") && !lineText.Contains("PROD"))
+                {
+                    var prevLine = prev1.Replace("PU", "").Split(',');
+
+                    HpglLabels hpglLabel = new HpglLabels()
+                    {
+                        labelX = Convert.ToDouble(prevLine[0]),
+                        labelY = Convert.ToDouble(prevLine[1]),
+                        label = lineText.Replace("LB", "").Replace("\u0003", "")
+                    };
+
+                    m_labels.Add(hpglLabel);
+                }
+                prev2 = prev1;
+                prev1 = lineText;
 
                 ReadLine(lineNumber, lineText);
             }
@@ -107,7 +135,7 @@ namespace Hpgl
             {
                 if (string.IsNullOrEmpty(text)) continue;
 
-                m_instructions.AddRange (ReadInstruction(lineNumber, text));
+                m_instructions.AddRange(ReadInstruction(lineNumber, text));
             }
         }
 
@@ -119,7 +147,7 @@ namespace Hpgl
             instructions.AddRange (PenDown.Matches(text));
             instructions.AddRange (PlotAbsolute.Matches(text));
 
-            if( instructions.Count == 0 )
+            if ( instructions.Count == 0 )
                 m_errors.Add (new HpglError(HpglErrorType.Warning, lineNumber, 
                     string.Format ("Ignoring instruction \"{0}\"", text))) ;
 
@@ -187,5 +215,6 @@ namespace Hpgl
         double m_penDownLength, m_penUpLength;
         List<IInstruction> m_instructions;
         List<HpglError> m_errors;
+        List<HpglLabels> m_labels;
     }
 }

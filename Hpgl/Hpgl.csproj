@@ -55,6 +55,7 @@
     <Compile Include="HpglUnit.cs" />
     <Compile Include="Instructions\IInstruction.cs" />
     <Compile Include="Instructions\PenDown.cs" />
+    <Compile Include="Instructions\Label.cs" />
     <Compile Include="Instructions\PenUp.cs" />
     <Compile Include="Instructions\PlotAbsolute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

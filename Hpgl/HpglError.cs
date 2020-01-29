@@ -12,6 +12,13 @@ namespace Hpgl
         Error,
     }
 
+    public class HpglLabels
+    {
+        public double labelX { get; set; }
+        public double labelY { get; set; }
+        public string label { get; set; }
+    }
+
     public class HpglError
     {
         public HpglError(HpglErrorType type, int line, string message)
@@ -39,5 +46,6 @@ namespace Hpgl
         HpglErrorType m_type;
         int m_line;
         string m_message;
+        string m_label;
     }
 }
